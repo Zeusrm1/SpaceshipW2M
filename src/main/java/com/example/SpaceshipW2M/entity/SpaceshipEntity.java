@@ -1,7 +1,6 @@
 package com.example.SpaceshipW2M.entity;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,7 +12,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "TBL_SPACESHIP")
+@Table(name = "TBL_SPACESHIPS")
 @Getter
 @Setter
 public class SpaceshipEntity {
@@ -23,7 +22,6 @@ public class SpaceshipEntity {
 	private int id;
 
 	@Column(name = "spaceship_name")
-	@NotNull
 	@NotBlank
 	private String spaceshipName;
 }
