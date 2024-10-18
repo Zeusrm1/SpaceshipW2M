@@ -3,12 +3,14 @@ package com.example.SpaceshipW2M.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.SpaceshipW2M.dto.SpaceshipDto;
@@ -102,6 +104,21 @@ public class SpaceshipController {
 			throw new IllegalArgumentException(ExceptionConstants.SPACESHIP_NOT_FOUND);
 		}
 		spaceshipService.deleteSpaceship(spaceshipId);
+	}
+
+	@GetMapping("/spaceships/paginated")
+	@Operation(summary = "Get paginated spaceships", description = "Get paginated list of spaceships from the database")
+	public ResponseEntity<Page<SpaceshipEntity>> getSpaceshipsPaginated(
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "7") int size) {
+		Page<SpaceshipEntity> spaceshipPage = spaceshipService.getSpaceshipsPaginated(page, size);
+		if (spaceshipPage.getTotalPages() < page) {
+			throw new IllegalArgumentException(ExceptionConstants.PAGE_NOT_FOUND);
+		}
+		if (spaceshipPage.isEmpty()) {
+			throw new IllegalArgumentException(ExceptionConstants.SPACESHIP_NOT_FOUND);
+		}
+		return ResponseEntity.ok(spaceshipPage);
 	}
 
 
