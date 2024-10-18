@@ -9,6 +9,6 @@ import javax.validation.constraints.NotBlank;
 public class SpaceshipDto {
 
 	@NotBlank
-	private String name;
+	private String spaceshipName;
 
 }
