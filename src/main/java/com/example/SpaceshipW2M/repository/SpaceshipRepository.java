@@ -12,4 +12,6 @@ public interface SpaceshipRepository extends JpaRepository<SpaceshipEntity, Inte
 
 	List<SpaceshipEntity> findByNameContainingIgnoreCase(String name);
 
+	boolean existsSpaceshipByName(String name);
+
 }

@@ -1,6 +1,9 @@
 package com.example.SpaceshipW2M.service;
 
+import java.util.List;
 import java.util.Optional;
+
+import javax.validation.constraints.NotBlank;
 
 import org.springframework.stereotype.Service;
 
@@ -18,8 +21,17 @@ public class SpaceshipService {
 	public void saveSpaceship(SpaceshipEntity spaceship) {
 		spaceshipRepository.save(spaceship);
 	}
+
 	public Optional<SpaceshipEntity> getSpaceship(int id) {
 		return spaceshipRepository.findById(id);
+	}
+
+	public List<SpaceshipEntity> getSpaceshipByName(String spaceshipName) {
+		return spaceshipRepository.findByNameContainingIgnoreCase(spaceshipName);
+	}
+
+	public List<SpaceshipEntity> getAllSpaceships() {
+		return spaceshipRepository.findAll();
 	}
 
 	public void updateSpaceship(SpaceshipEntity spaceship) {
@@ -30,5 +42,8 @@ public class SpaceshipService {
 		spaceshipRepository.deleteById(id);
 	}
 
+	public boolean existsSpaceshipByName(@NotBlank String spaceshipName) {
+		return spaceshipRepository.existsSpaceshipByName(spaceshipName);
+	}
 
 }
