@@ -19,3 +19,10 @@ Use maven to build the project.
 ```bash
 mvn clean install
 ```
+
+# Usage
+Run the project with maven.
+
+```bash
+mvn spring-boot:run
+```
