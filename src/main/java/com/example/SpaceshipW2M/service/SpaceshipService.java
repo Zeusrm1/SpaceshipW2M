@@ -33,7 +33,7 @@ public class SpaceshipService {
 
 	@Cacheable(value = "spaceship", key = "#spaceshipName")
 	public List<SpaceshipEntity> getSpaceshipByName(String spaceshipName) {
-		return spaceshipRepository.findByNameContainingIgnoreCase(spaceshipName);
+		return spaceshipRepository.findBySpaceshipNameContainingIgnoreCase(spaceshipName);
 	}
 
 	@Cacheable(value = "spaceship")
@@ -52,7 +52,7 @@ public class SpaceshipService {
 	}
 
 	public boolean existsSpaceshipByName(@NotBlank String spaceshipName) {
-		return spaceshipRepository.existsSpaceshipByName(spaceshipName);
+		return spaceshipRepository.existsSpaceshipBySpaceshipName(spaceshipName);
 	}
 
 }
