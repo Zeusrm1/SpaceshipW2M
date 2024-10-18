@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="1" author="zrodriguez">
+        <createTable tableName="TBL_SPACESHIPS">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="spaceship_name" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="zrodriguez">
+        <addUniqueConstraint columnNames="spaceship_name" tableName="TBL_SPACESHIPS" constraintName="unique_spaceship_name"/>
+    </changeSet>
+
+    <changeSet id="3" author="zrodriguez">
+        <insert tableName="TBL_SPACESHIPS">
+            <column name="spaceship_name" value="Cygnus Explorer"/>
+        </insert>
+        <insert tableName="TBL_SPACESHIPS">
+            <column name="spaceship_name" value="Serenity"/>
+        </insert>
+        <insert tableName="TBL_SPACESHIPS">
+            <column name="spaceship_name" value="USS Enterprise"/>
+        </insert>
+        <insert tableName="TBL_SPACESHIPS">
+            <column name="spaceship_name" value="TARDIS"/>
+        </insert>
+        <insert tableName="TBL_SPACESHIPS">
+            <column name="spaceship_name" value="Battlestar Galactica"/>
+        </insert>
+        <insert tableName="TBL_SPACESHIPS">
+            <column name="spaceship_name" value="Heart of Gold"/>
+        </insert>
+        <insert tableName="TBL_SPACESHIPS">
+            <column name="spaceship_name" value="Rocinante"/>
+        </insert>
+        <insert tableName="TBL_SPACESHIPS">
+            <column name="spaceship_name" value="Starbug"/>
+        </insert>
+        <insert tableName="TBL_SPACESHIPS">
+            <column name="spaceship_name" value="Red Dwarf"/>
+        </insert>
+        <insert tableName="TBL_SPACESHIPS">
+            <column name="spaceship_name" value="Eagle Transporter"/>
+        </insert>
+        <insert tableName="TBL_SPACESHIPS">
+            <column name="spaceship_name" value="Viper"/>
+        </insert>
+        <insert tableName="TBL_SPACESHIPS">
+            <column name="spaceship_name" value="X-Wing"/>
+        </insert>
+        <insert tableName="TBL_SPACESHIPS">
+            <column name="spaceship_name" value="TIE Fighter"/>
+        </insert>
+        <insert tableName="TBL_SPACESHIPS">
+            <column name="spaceship_name" value="Sulaco"/>
+        </insert>
+        <insert tableName="TBL_SPACESHIPS">
+            <column name="spaceship_name" value="Nostromo"/>
+        </insert>
+        <insert tableName="TBL_SPACESHIPS">
+            <column name="spaceship_name" value="Event Horizon"/>
+        </insert>
+        <insert tableName="TBL_SPACESHIPS">
+            <column name="spaceship_name" value="Starfury"/>
+        </insert>
+        <insert tableName="TBL_SPACESHIPS">
+            <column name="spaceship_name" value="Millennium Falcon"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
