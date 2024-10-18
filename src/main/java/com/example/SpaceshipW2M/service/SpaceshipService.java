@@ -5,6 +5,9 @@ import java.util.Optional;
 
 import javax.validation.constraints.NotBlank;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.example.SpaceshipW2M.entity.SpaceshipEntity;
@@ -18,26 +21,32 @@ public class SpaceshipService {
 
 	private SpaceshipRepository spaceshipRepository;
 
+	@CachePut(value = "spaceship", key = "#spaceship.id")
 	public void saveSpaceship(SpaceshipEntity spaceship) {
 		spaceshipRepository.save(spaceship);
 	}
 
+	@Cacheable(value = "spaceship", key = "#id")
 	public Optional<SpaceshipEntity> getSpaceship(int id) {
 		return spaceshipRepository.findById(id);
 	}
 
+	@Cacheable(value = "spaceship", key = "#spaceshipName")
 	public List<SpaceshipEntity> getSpaceshipByName(String spaceshipName) {
 		return spaceshipRepository.findByNameContainingIgnoreCase(spaceshipName);
 	}
 
+	@Cacheable(value = "spaceship")
 	public List<SpaceshipEntity> getAllSpaceships() {
 		return spaceshipRepository.findAll();
 	}
 
+	@CachePut(value = "spaceship", key = "#spaceship.id")
 	public void updateSpaceship(SpaceshipEntity spaceship) {
 		spaceshipRepository.save(spaceship);
 	}
 
+	@CacheEvict(value = "spaceship", key = "#id")
 	public void deleteSpaceship(int id) {
 		spaceshipRepository.deleteById(id);
 	}
