@@ -10,6 +10,6 @@ import com.example.SpaceshipW2M.entity.SpaceshipEntity;
 @Repository
 public interface SpaceshipRepository extends JpaRepository<SpaceshipEntity, Integer> {
 
-	List<SpaceshipEntity> findByNameContaining(String name);
+	List<SpaceshipEntity> findByNameContainingIgnoreCase(String name);
 
 }
