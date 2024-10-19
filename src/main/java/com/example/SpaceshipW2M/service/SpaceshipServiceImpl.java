@@ -60,7 +60,7 @@ public class SpaceshipServiceImpl implements SpaceshipService {
                 .collect(Collectors.toList());
     }
 
-    @CachePut(value = "spaceship", key = "#spaceshipDto.id")
+    @CachePut(value = "spaceship", key = "#id")
     public SpaceshipDto updateSpaceship(Long id, String spaceshipName) {
         SpaceshipDto spaceshipDto = new SpaceshipDto(id, spaceshipName);
         SpaceshipEntity spaceshipEntity = convertToEntity(spaceshipDto);
