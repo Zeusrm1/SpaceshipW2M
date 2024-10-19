@@ -9,5 +9,4 @@ class SpaceshipW2MApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }

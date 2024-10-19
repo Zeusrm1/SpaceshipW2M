@@ -26,7 +26,7 @@ public class SpaceshipServiceImpl implements SpaceshipService {
     @Autowired
     private SpaceshipRepository spaceshipRepository;
 
-    @CachePut(value = "spaceship", key = "#spaceshipDto.id")
+    @CachePut(value = "spaceship", key = "#result.id")
     public SpaceshipDto saveSpaceship(SpaceshipDto spaceshipDto) {
         SpaceshipEntity spaceshipEntity = convertToEntity(spaceshipDto);
         spaceshipRepository.save(spaceshipEntity);

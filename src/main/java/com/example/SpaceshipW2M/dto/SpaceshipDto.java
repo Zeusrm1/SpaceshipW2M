@@ -22,4 +22,8 @@ public class SpaceshipDto {
         this.id = id;
         this.spaceshipName = spaceshipName;
     }
+
+	public SpaceshipDto() {
+
+	}
 }

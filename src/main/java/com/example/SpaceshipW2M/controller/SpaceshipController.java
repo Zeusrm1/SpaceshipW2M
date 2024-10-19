@@ -73,18 +73,21 @@ public class SpaceshipController {
 
 	@PutMapping("/spaceship/{spaceshipId}")
 	@Operation(summary = "Update a spaceship", description = "Update a spaceship by its id")
-	public ResponseEntity<SpaceshipDto> updateSpaceship(@PathVariable("spaceshipId") Long spaceshipId, @RequestBody String spaceshipName) {
+	public ResponseEntity<SpaceshipDto> updateSpaceship(
+			@PathVariable("spaceshipId") Long spaceshipId,
+			@RequestBody SpaceshipDto spaceshipDto) {
+
 		spaceshipService.getSpaceship(spaceshipId)
 				.orElseThrow(() -> new IllegalArgumentException(ExceptionConstants.SPACESHIP_NOT_FOUND));
-
-		if (StringUtil.isNullOrEmpty(spaceshipName)) {
+		if (StringUtil.isNullOrEmpty(spaceshipDto.getSpaceshipName())) {
 			throw new IllegalArgumentException(ExceptionConstants.SPACESHIP_NAME_REQUIRED);
 		}
-		if (spaceshipService.existsSpaceshipByName(spaceshipName)) {
+		if (spaceshipService.existsSpaceshipByName(spaceshipDto.getSpaceshipName())) {
 			throw new IllegalArgumentException(ExceptionConstants.SPACESHIP_NAME_ALREADY_EXISTS);
 		}
-		SpaceshipDto spaceshipDto = spaceshipService.updateSpaceship(spaceshipId, spaceshipName);
-		return ResponseEntity.ok(spaceshipDto);
+
+		SpaceshipDto updatedSpaceship = spaceshipService.updateSpaceship(spaceshipId, spaceshipDto.getSpaceshipName());
+		return ResponseEntity.ok(updatedSpaceship);
 	}
 
 	@DeleteMapping("/spaceship/{spaceshipId}")
@@ -103,15 +106,12 @@ public class SpaceshipController {
 			@RequestParam(defaultValue = "7") int size,
 			PagedResourcesAssembler<SpaceshipDto> assembler) {
 		Page<SpaceshipDto> spaceshipPage = spaceshipService.getSpaceshipsPaginated(page, size);
-
 		if (spaceshipPage.getTotalPages() < page) {
 			throw new IllegalArgumentException(ExceptionConstants.PAGE_NOT_FOUND);
 		}
-
 		if (spaceshipPage.isEmpty()) {
 			throw new IllegalArgumentException(ExceptionConstants.SPACESHIP_NOT_FOUND);
 		}
-
 		return ResponseEntity.ok(assembler.toModel(spaceshipPage));
 	}
 }
