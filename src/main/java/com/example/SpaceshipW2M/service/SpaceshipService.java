@@ -5,23 +5,23 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 
-import com.example.SpaceshipW2M.entity.SpaceshipEntity;
+import com.example.SpaceshipW2M.dto.SpaceshipDto;
 
 public interface SpaceshipService {
 
-	void saveSpaceship(SpaceshipEntity spaceship);
+	SpaceshipDto saveSpaceship(SpaceshipDto spaceshipDto);
 
-	Optional<SpaceshipEntity> getSpaceship(int id);
+	Optional<SpaceshipDto> getSpaceship(Long id);
 
-	List<SpaceshipEntity> getSpaceshipByName(String spaceshipName);
+	List<SpaceshipDto> getSpaceshipByName(String spaceshipName);
 
-	List<SpaceshipEntity> getAllSpaceships();
+	List<SpaceshipDto> getAllSpaceships();
 
-	void updateSpaceship(SpaceshipEntity spaceship);
+	SpaceshipDto updateSpaceship(Long id, String spaceshipName);
 
-	void deleteSpaceship(int id);
+	void deleteSpaceship(Long id);
 
 	boolean existsSpaceshipByName(String spaceshipName);
 
-	Page<SpaceshipEntity> getSpaceshipsPaginated(int page, int size);
+	Page<SpaceshipDto> getSpaceshipsPaginated(int page, int size);
 }
