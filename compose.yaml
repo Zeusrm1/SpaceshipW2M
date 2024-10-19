@@ -1,14 +1,13 @@
-version: '3.8'
-
 services:
   app:
-    image: openjdk:17-alpine
+    image: openjdk:21-jdk-slim
     container_name: spring-boot-app
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
+      - "5005:5005"
     environment:
       SPRING_PROFILES_ACTIVE: "dev"
     volumes:
