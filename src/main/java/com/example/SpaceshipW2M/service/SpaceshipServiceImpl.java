@@ -17,6 +17,7 @@ import com.example.SpaceshipW2M.dto.SpaceshipDto;
 import com.example.SpaceshipW2M.entity.SpaceshipEntity;
 import com.example.SpaceshipW2M.repository.SpaceshipRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -62,9 +63,9 @@ public class SpaceshipServiceImpl implements SpaceshipService {
 
     @CachePut(value = "spaceship", key = "#id")
     public SpaceshipDto updateSpaceship(Long id, String spaceshipName) {
-        SpaceshipDto spaceshipDto = new SpaceshipDto(id, spaceshipName);
-        SpaceshipEntity spaceshipEntity = convertToEntity(spaceshipDto);
-        spaceshipEntity.setId(id);
+        SpaceshipEntity spaceshipEntity = spaceshipRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Spaceship not found with id: " + id));
+        spaceshipEntity.setSpaceshipName(spaceshipName);
         spaceshipRepository.save(spaceshipEntity);
         return convertToDto(spaceshipEntity);
     }

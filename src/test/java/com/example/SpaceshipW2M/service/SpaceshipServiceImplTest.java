@@ -5,6 +5,7 @@ import com.example.SpaceshipW2M.entity.SpaceshipEntity;
 import com.example.SpaceshipW2M.repository.SpaceshipRepository;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -47,6 +49,72 @@ public class SpaceshipServiceImplTest {
 	}
 
 	@Test
+	@DisplayName("Test save spaceship")
+	void testSaveSpaceship() {
+		when(spaceshipRepository.save(any(SpaceshipEntity.class))).thenReturn(spaceshipEntity);
+
+		SpaceshipDto result = spaceshipService.saveSpaceship(spaceshipDto);
+
+		assertEquals("Falcon", result.getSpaceshipName());
+		verify(spaceshipRepository, times(1)).save(any(SpaceshipEntity.class));
+		verify(spaceshipRepository).save(argThat(entity -> entity.getSpaceshipName().equals("Falcon")));
+
+	}
+
+	@Test
+	@DisplayName("Test update spaceship")
+	void testUpdateSpaceship() {
+		when(spaceshipRepository.findById(1L)).thenReturn(Optional.of(spaceshipEntity));
+		when(spaceshipRepository.save(any(SpaceshipEntity.class))).thenReturn(spaceshipEntity);
+
+		SpaceshipDto result = spaceshipService.updateSpaceship(1L, "Falcon Updated");
+
+		assertEquals("Falcon Updated", result.getSpaceshipName());
+
+		verify(spaceshipRepository).findById(1L);
+		verify(spaceshipRepository).save(any(SpaceshipEntity.class));
+	}
+
+	@Test
+	@DisplayName("Test delete spaceship")
+	void testDeleteSpaceship() {
+		doNothing().when(spaceshipRepository).deleteById(1L);
+
+		spaceshipService.deleteSpaceship(1L);
+
+		verify(spaceshipRepository, times(1)).deleteById(1L);
+		verifyNoMoreInteractions(spaceshipRepository);
+	}
+
+	@Test
+	@DisplayName("Test exists spaceship by name")
+	void testExistsSpaceshipByName() {
+		when(spaceshipRepository.existsSpaceshipBySpaceshipName("Falcon")).thenReturn(true);
+
+		boolean result = spaceshipService.existsSpaceshipByName("Falcon");
+
+		assertTrue(result);
+	}
+
+	@Test
+	@DisplayName("Test get spaceship")
+	void testGetSpaceship() {
+		when(spaceshipRepository.findById(1L)).thenReturn(Optional.of(spaceshipEntity));
+
+		Optional<SpaceshipDto> result = spaceshipService.getSpaceship(1L);
+
+		assertTrue(result.isPresent());
+		assertEquals("Falcon", result.get().getSpaceshipName());
+
+		when(spaceshipRepository.findById(2L)).thenReturn(Optional.empty());
+
+		Optional<SpaceshipDto> notFoundResult = spaceshipService.getSpaceship(2L);
+
+		assertFalse(notFoundResult.isPresent());
+	}
+
+	@Test
+	@DisplayName("Test get all spaceships")
 	void testGetAllSpaceships() {
 		when(spaceshipRepository.findAll()).thenReturn(Collections.singletonList(spaceshipEntity));
 
@@ -57,51 +125,7 @@ public class SpaceshipServiceImplTest {
 	}
 
 	@Test
-	void testSaveSpaceship() {
-		when(spaceshipRepository.save(any(SpaceshipEntity.class))).thenReturn(spaceshipEntity);
-
-		SpaceshipDto result = spaceshipService.saveSpaceship(spaceshipDto);
-
-		assertEquals("Falcon", result.getSpaceshipName());
-	}
-
-	@Test
-	void testUpdateSpaceship() {
-        lenient().when(spaceshipRepository.findById(1L)).thenReturn(Optional.of(spaceshipEntity));
-
-        SpaceshipDto result = spaceshipService.updateSpaceship(1L, "Falcon Updated");
-
-		assertEquals("Falcon Updated", result.getSpaceshipName());
-	}
-
-	@Test
-	void testDeleteSpaceship() {
-		doNothing().when(spaceshipRepository).deleteById(1L);
-
-		spaceshipService.deleteSpaceship(1L);
-
-		verify(spaceshipRepository, times(1)).deleteById(1L);
-	}
-
-	@Test
-	void testExistsSpaceshipByName() {
-		when(spaceshipRepository.existsSpaceshipBySpaceshipName("Falcon")).thenReturn(true);
-
-		boolean result = spaceshipService.existsSpaceshipByName("Falcon");
-
-		assertTrue(result);
-	}
-
-	@Test
-	void testGetSpaceship() {
-		when(spaceshipRepository.findById(1L)).thenReturn(Optional.of(spaceshipEntity));
-
-		Optional<SpaceshipDto> result = spaceshipService.getSpaceship(1L);
-
-		assertEquals("Falcon", result.get().getSpaceshipName());
-	}
-
-	@Test
+	@DisplayName("Test get spaceship by name")
 	void testGetSpaceshipByName() {
 		when(spaceshipRepository.findBySpaceshipNameContainingIgnoreCase("Falcon")).thenReturn(Collections.singletonList(spaceshipEntity));
 
@@ -112,6 +136,7 @@ public class SpaceshipServiceImplTest {
 	}
 
 	@Test
+	@DisplayName("Test get spaceships paginated")
 	void testGetSpaceshipsPaginated() {
 		List<SpaceshipEntity> spaceshipEntities = Collections.singletonList(spaceshipEntity);
 		Page<SpaceshipEntity> spaceshipPage = new PageImpl<>(spaceshipEntities);
