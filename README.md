@@ -53,7 +53,7 @@ You can run the application using Docker.
 
 Build the Docker image:
 ```bash
-docker build -t spaceship-app .
+docker build -t spring-boot-app .
 ```
 Run the Docker container:
 ```bash
