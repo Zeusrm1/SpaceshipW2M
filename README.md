@@ -53,7 +53,7 @@ You can run the application using Docker.
 
 Build the Docker image:
 ```bash
-docker build -t spaceship-project .
+docker build -t spaceship-app .
 ```
 Run the Docker container:
 ```bash
@@ -63,13 +63,18 @@ docker-compose up
 Or you can build and run with:
 ```bash
 docker-compose up --build
-```
-
- 
+``` 
 
 The application will be available at http://localhost:8080.
 
 To access the Swagger UI, navigate to http://localhost:8080/swagger-ui.html.
+
+# Security
+
+The application uses basic authentication with the following credentials:
+
+- **User Name**: user
+- **Password**: password
 
 # Database
 
