@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -28,6 +29,7 @@ import jakarta.transaction.Transactional;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
+@ActiveProfiles("test")
 public class SpaceshipControllerIntegrationTest {
 
 	@Autowired
@@ -75,7 +77,8 @@ public class SpaceshipControllerIntegrationTest {
 		SpaceshipEntity spaceshipEntity = spaceshipRepository.save(convertToEntity(spaceshipDto));
 		spaceshipDto.setId(spaceshipEntity.getId());
 
-		mockMvc.perform(get("/spaceship/{id}", spaceshipDto.getId()))
+		mockMvc.perform(get("/spaceship/{id}", spaceshipDto.getId())
+						.with(httpBasic(USERNAME, PASSWORD)))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.spaceshipName").value("Imperial Star Destroyer 2"));
 	}
