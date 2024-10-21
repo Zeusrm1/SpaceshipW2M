@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.SpaceshipW2M.dto.SpaceshipDto;
-import com.example.SpaceshipW2M.service.KafkaProducerService;
 import com.example.SpaceshipW2M.service.SpaceshipService;
 import com.example.SpaceshipW2M.utils.ExceptionConstants;
 
@@ -24,20 +23,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "Spaceship API", description = "API for managing spaceships")
 public class SpaceshipController {
 
-	private final SpaceshipService spaceshipService;
+	private SpaceshipService spaceshipService;
 
 	@Autowired
 	public SpaceshipController(SpaceshipService spaceshipService) {
 		this.spaceshipService = spaceshipService;
 	}
 
-	@Autowired
-	private KafkaProducerService kafkaProducerService;
-
-	@PostMapping("/send")
-	public void sendMessage(@RequestBody Object message) {
-		kafkaProducerService.sendMessage(message);
-	}
 
 	@PostMapping("/spaceship")
 	@Operation(summary = "Save a spaceship", description = "Save a spaceship in the database")
