@@ -19,59 +19,58 @@ import com.example.SpaceshipW2M.entity.SpaceshipEntity;
 import com.example.SpaceshipW2M.repository.SpaceshipRepository;
 
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Transactional
+@Slf4j
 public class SpaceshipServiceImpl implements SpaceshipService {
 
     @Autowired
     private SpaceshipRepository spaceshipRepository;
 
-    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(SpaceshipServiceImpl.class);
 
     @CachePut(value = "spaceship", key = "#result.id")
     public SpaceshipDto saveSpaceship(SpaceshipDto spaceshipDto) {
-        logger.info("Saving spaceship with name: {}", spaceshipDto.getSpaceshipName());
-        SpaceshipEntity spaceshipEntity = convertToEntity(spaceshipDto);
-        spaceshipRepository.save(spaceshipEntity);
+        log.info("Saving spaceship with name: {}", spaceshipDto.getSpaceshipName());
+        SpaceshipEntity spaceshipEntity = this.convertToEntity(spaceshipDto);
+        spaceshipEntity = spaceshipRepository.save(spaceshipEntity);
         return convertToDto(spaceshipEntity);
     }
 
     @Cacheable(value = "spaceship", key = "#id")
     public Optional<SpaceshipDto> getSpaceship(Long id) {
-        logger.info("Getting spaceship with id: {}", id);
+        log.info("Getting spaceship with id: {}", id);
         return spaceshipRepository.findById(id).map(this::convertToDto);
     }
 
     @Cacheable(value = "spaceship", key = "#spaceshipName")
     public List<SpaceshipDto> getSpaceshipByName(String spaceshipName) {
-        logger.info("Getting spaceship with name: {}", spaceshipName);
+        log.info("Getting spaceship with name: {}", spaceshipName);
         return spaceshipRepository.findBySpaceshipNameContainingIgnoreCase(spaceshipName)
                 .stream()
                 .map(this::convertToDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Cacheable(value = "spaceship", key = "#page + #size")
     public Page<SpaceshipDto> getSpaceshipsPaginated(int page, int size) {
-        logger.info("Getting spaceships with page: {} and size: {}", page, size);
+        log.info("Getting spaceships with page: {} and size: {}", page, size);
         Pageable pageable = PageRequest.of(page, size);
         return spaceshipRepository.findAll(pageable).map(this::convertToDto);
     }
 
     @Cacheable(value = "spaceship")
     public List<SpaceshipDto> getAllSpaceships() {
-        logger.info("Getting all spaceships");
+        log.info("Getting all spaceships");
         return spaceshipRepository.findAll()
                 .stream()
                 .map(this::convertToDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @CachePut(value = "spaceship", key = "#id")
     public SpaceshipDto updateSpaceship(Long id, String spaceshipName) {
-        logger.info("Updating spaceship with id: {}", id);
+        log.info("Updating spaceship with id: {}", id);
         SpaceshipEntity spaceshipEntity = spaceshipRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Spaceship not found with id: " + id));
         spaceshipEntity.setSpaceshipName(spaceshipName);
@@ -81,7 +80,7 @@ public class SpaceshipServiceImpl implements SpaceshipService {
 
     @CacheEvict(value = "spaceship", key = "#id")
     public void deleteSpaceship(Long id) {
-        logger.info("Deleting spaceship with id: {}", id);
+        log.info("Deleting spaceship with id: {}", id);
         spaceshipRepository.deleteById(id);
     }
 
