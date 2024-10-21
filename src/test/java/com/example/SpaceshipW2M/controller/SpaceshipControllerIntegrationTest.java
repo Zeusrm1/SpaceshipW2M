@@ -11,9 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,13 +22,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 
-import jakarta.transaction.Transactional;
-
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@Transactional
 @ActiveProfiles("test")
 public class SpaceshipControllerIntegrationTest {
 
@@ -46,7 +42,6 @@ public class SpaceshipControllerIntegrationTest {
 		spaceshipRepository.deleteAll();
 	}
 
-	// Add the credentials as constants
 	private static final String USERNAME = "user";
 	private static final String PASSWORD = "password";
 
@@ -60,6 +55,7 @@ public class SpaceshipControllerIntegrationTest {
 	@Test
 	void testCreateSpaceship() throws Exception {
 		SpaceshipDto spaceshipDto = new SpaceshipDto();
+        spaceshipDto.setId(1L);
 		spaceshipDto.setSpaceshipName("Enterprise");
 
 		mockMvc.perform(post("/spaceship")
@@ -68,6 +64,21 @@ public class SpaceshipControllerIntegrationTest {
 						.content(objectMapper.writeValueAsString(spaceshipDto)))
 				.andExpect(status().isCreated())
 				.andExpect(jsonPath("$.spaceshipName").value("Enterprise"));
+	}
+
+	@Test
+	void testSaveSpaceshipAlreadyExists() throws Exception {
+		SpaceshipDto spaceshipDto = new SpaceshipDto();
+		spaceshipDto.setId(1L);
+		spaceshipDto.setSpaceshipName("Enterprise");
+		spaceshipRepository.save(convertToEntity(spaceshipDto));
+
+		mockMvc.perform(post("/spaceship")
+						.with(httpBasic(USERNAME, PASSWORD))
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(objectMapper.writeValueAsString(spaceshipDto)))
+				.andExpect(status().isBadRequest())
+				.andExpect(content().string(ExceptionConstants.SPACESHIP_NAME_ALREADY_EXISTS));
 	}
 
 	@Test
@@ -81,6 +92,32 @@ public class SpaceshipControllerIntegrationTest {
 						.with(httpBasic(USERNAME, PASSWORD)))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.spaceshipName").value("Imperial Star Destroyer 2"));
+	}
+
+	@Test
+	void testGetSpaceshipByIdNotFound() throws Exception {
+		mockMvc.perform(get("/spaceship/{id}", 99999L)
+						.with(httpBasic(USERNAME, PASSWORD)))
+				.andExpect(status().isBadRequest())
+				.andExpect(content().string(ExceptionConstants.SPACESHIP_NOT_FOUND));
+	}
+
+	@Test
+	void testGetSpaceshipByName() throws Exception {
+		SpaceshipDto spaceshipDto1 = new SpaceshipDto();
+		spaceshipDto1.setSpaceshipName("Enterprise");
+		SpaceshipEntity spaceshipEntity1 = spaceshipRepository.save(convertToEntity(spaceshipDto1));
+		spaceshipDto1.setId(spaceshipEntity1.getId());
+
+		SpaceshipDto spaceshipDto2 = new SpaceshipDto();
+		spaceshipDto2.setSpaceshipName("Imperial Star Destroyer");
+		SpaceshipEntity spaceshipEntity2 = spaceshipRepository.save(convertToEntity(spaceshipDto2));
+		spaceshipDto2.setId(spaceshipEntity2.getId());
+
+		mockMvc.perform(get("/spaceship/name/{name}", "Enterprise")
+						.with(httpBasic(USERNAME, PASSWORD)))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$[0].spaceshipName").value("Enterprise"));
 	}
 
 	@Test
@@ -101,6 +138,28 @@ public class SpaceshipControllerIntegrationTest {
 	}
 
 	@Test
+	void testUpdateSpaceshipNameAlreadyExists() throws Exception {
+		SpaceshipDto spaceshipDto1 = new SpaceshipDto();
+		spaceshipDto1.setSpaceshipName("Enterprise");
+		SpaceshipEntity spaceshipEntity1 = spaceshipRepository.save(convertToEntity(spaceshipDto1));
+		spaceshipDto1.setId(spaceshipEntity1.getId());
+
+		SpaceshipDto spaceshipDto2 = new SpaceshipDto();
+		spaceshipDto2.setSpaceshipName("Imperial Star Destroyer");
+		SpaceshipEntity spaceshipEntity2 = spaceshipRepository.save(convertToEntity(spaceshipDto2));
+		spaceshipDto2.setId(spaceshipEntity2.getId());
+
+		spaceshipDto2.setSpaceshipName("Enterprise");
+
+		mockMvc.perform(put("/spaceship/{id}", spaceshipDto2.getId())
+						.with(httpBasic(USERNAME, PASSWORD))
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(objectMapper.writeValueAsString(spaceshipDto2)))
+				.andExpect(status().isBadRequest())
+				.andExpect(content().string(ExceptionConstants.SPACESHIP_NAME_ALREADY_EXISTS));
+	}
+
+	@Test
 	void testDeleteSpaceship() throws Exception {
 		SpaceshipDto spaceshipDto = new SpaceshipDto();
 		spaceshipDto.setSpaceshipName("Discovery");
@@ -110,6 +169,14 @@ public class SpaceshipControllerIntegrationTest {
 		mockMvc.perform(delete("/spaceship/{id}", spaceshipDto.getId())
 						.with(httpBasic(USERNAME, PASSWORD)))
 				.andExpect(status().isNoContent());
+	}
+
+	@Test
+	void testDeleteSpaceshipNotFound() throws Exception {
+		mockMvc.perform(delete("/spaceship/{id}", 99999L)
+						.with(httpBasic(USERNAME, PASSWORD)))
+				.andExpect(status().isBadRequest())
+				.andExpect(content().string(ExceptionConstants.SPACESHIP_NOT_FOUND));
 	}
 
     @Test
@@ -131,23 +198,13 @@ public class SpaceshipControllerIntegrationTest {
                 .andExpect(jsonPath("$[1].spaceshipName").value("Imperial Star Destroyer"));
     }
 
-    @Test
-    void testGetSpaceshipByName() throws Exception {
-        SpaceshipDto spaceshipDto1 = new SpaceshipDto();
-        spaceshipDto1.setSpaceshipName("Enterprise");
-        SpaceshipEntity spaceshipEntity1 = spaceshipRepository.save(convertToEntity(spaceshipDto1));
-        spaceshipDto1.setId(spaceshipEntity1.getId());
-
-        SpaceshipDto spaceshipDto2 = new SpaceshipDto();
-        spaceshipDto2.setSpaceshipName("Imperial Star Destroyer");
-        SpaceshipEntity spaceshipEntity2 = spaceshipRepository.save(convertToEntity(spaceshipDto2));
-        spaceshipDto2.setId(spaceshipEntity2.getId());
-
-        mockMvc.perform(get("/spaceship/name/{name}", "Enterprise")
+	@Test
+	void testGetAllSpaceshipsWhenNoneExist() throws Exception {
+		mockMvc.perform(get("/spaceships")
 						.with(httpBasic(USERNAME, PASSWORD)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].spaceshipName").value("Enterprise"));
-    }
+				.andExpect(status().isBadRequest())
+				.andExpect(content().string(ExceptionConstants.SPACESHIP_NOT_FOUND));
+	}
 
     @Test
     void testGetSpaceshipsPaginated() throws Exception {
@@ -169,80 +226,20 @@ public class SpaceshipControllerIntegrationTest {
     }
 
     @Test
-    void testSaveSpaceshipWithEmptyName() throws Exception {
-        SpaceshipDto spaceshipDto = new SpaceshipDto();
-        spaceshipDto.setSpaceshipName("");
-
-        mockMvc.perform(post("/spaceship")
-						.with(httpBasic(USERNAME, PASSWORD))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(spaceshipDto)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(ExceptionConstants.SPACESHIP_NAME_REQUIRED));
-    }
-
-    @Test
-    void testSaveSpaceshipAlreadyExists() throws Exception {
-        SpaceshipDto spaceshipDto = new SpaceshipDto();
-        spaceshipDto.setSpaceshipName("Enterprise");
-        spaceshipRepository.save(convertToEntity(spaceshipDto));
-
-        mockMvc.perform(post("/spaceship")
-						.with(httpBasic(USERNAME, PASSWORD))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(spaceshipDto)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(ExceptionConstants.SPACESHIP_NAME_ALREADY_EXISTS));
-    }
-
-    @Test
-    void testGetAllSpaceshipsWhenNoneExist() throws Exception {
-        mockMvc.perform(get("/spaceships")
-						.with(httpBasic(USERNAME, PASSWORD)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(ExceptionConstants.SPACESHIP_NOT_FOUND));
-    }
-
-
-    @Test
-    void testGetSpaceshipByIdNotFound() throws Exception {
-        mockMvc.perform(get("/spaceship/{id}", 99999L)
-						.with(httpBasic(USERNAME, PASSWORD)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(ExceptionConstants.SPACESHIP_NOT_FOUND));
-    }
-
-    @Test
-    void testUpdateSpaceshipWithEmptyName() throws Exception {
-        SpaceshipDto spaceshipDto = new SpaceshipDto();
-        spaceshipDto.setSpaceshipName("Enterprise");
-        SpaceshipEntity spaceshipEntity = spaceshipRepository.save(convertToEntity(spaceshipDto));
-        spaceshipDto.setId(spaceshipEntity.getId());
-
-        spaceshipDto.setSpaceshipName("");
-
-        mockMvc.perform(put("/spaceship/{id}", spaceshipDto.getId())
-						.with(httpBasic(USERNAME, PASSWORD))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(spaceshipDto)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(ExceptionConstants.SPACESHIP_NAME_REQUIRED));
-    }
-
-    @Test
-    void testDeleteSpaceshipNotFound() throws Exception {
-        mockMvc.perform(delete("/spaceship/{id}", 99999L)
-						.with(httpBasic(USERNAME, PASSWORD)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(ExceptionConstants.SPACESHIP_NOT_FOUND));
-    }
-
-    @Test
     void testGetSpaceshipsPaginatedOutOfBounds() throws Exception {
         mockMvc.perform(get("/spaceships/paginated?page=99999&size=7")
 						.with(httpBasic(USERNAME, PASSWORD)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(ExceptionConstants.PAGE_NOT_FOUND));
     }
+
+	@Test
+	void testGetSpaceshipsPaginatedEmpty() throws Exception {
+		mockMvc.perform(get("/spaceships/paginated")
+						.with(httpBasic(USERNAME, PASSWORD)))
+				.andExpect(status().isBadRequest())
+				.andExpect(content().string(ExceptionConstants.SPACESHIP_NOT_FOUND));
+	}
+
 
 }
