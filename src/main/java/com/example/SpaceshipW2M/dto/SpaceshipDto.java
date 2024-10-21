@@ -1,8 +1,11 @@
 package com.example.SpaceshipW2M.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import javax.validation.constraints.NotBlank;
+
+import com.example.SpaceshipW2M.utils.ExceptionConstants;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -10,10 +13,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Setter
 public class SpaceshipDto {
 
-	@NotBlank
+	@NotNull(message = ExceptionConstants.SPACESHIP_ID_REQUIRED)
     private Long id;
 
-	@NotBlank
+	@NotBlank(message = ExceptionConstants.SPACESHIP_NAME_REQUIRED)
     private String spaceshipName;
 
     @JsonCreator

@@ -15,15 +15,15 @@ import com.example.SpaceshipW2M.dto.SpaceshipDto;
 import com.example.SpaceshipW2M.service.SpaceshipService;
 import com.example.SpaceshipW2M.utils.ExceptionConstants;
 
-import ch.qos.logback.core.util.StringUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @Tag(name = "Spaceship API", description = "API for managing spaceships")
 public class SpaceshipController {
 
-	private SpaceshipService spaceshipService;
+	private final SpaceshipService spaceshipService;
 
 	@Autowired
 	public SpaceshipController(SpaceshipService spaceshipService) {
@@ -33,10 +33,7 @@ public class SpaceshipController {
 
 	@PostMapping("/spaceship")
 	@Operation(summary = "Save a spaceship", description = "Save a spaceship in the database")
-	public ResponseEntity<SpaceshipDto> saveSpaceship(@RequestBody SpaceshipDto spaceshipDto) {
-		if (StringUtil.isNullOrEmpty(spaceshipDto.getSpaceshipName())) {
-			throw new IllegalArgumentException(ExceptionConstants.SPACESHIP_NAME_REQUIRED);
-		}
+	public ResponseEntity<SpaceshipDto> saveSpaceship(@RequestBody @Valid SpaceshipDto spaceshipDto) {
 		if (spaceshipService.existsSpaceshipByName(spaceshipDto.getSpaceshipName())) {
 			throw new IllegalArgumentException(ExceptionConstants.SPACESHIP_NAME_ALREADY_EXISTS);
 		}
@@ -64,25 +61,18 @@ public class SpaceshipController {
 
 	@GetMapping("/spaceship/name/{spaceshipName}")
 	@Operation(summary = "Get a spaceship by name", description = "Get a spaceship by its name")
-	public ResponseEntity<List<SpaceshipDto>> getSpaceshipByName(@PathVariable("spaceshipName") String spaceshipName) {
-		if (StringUtil.isNullOrEmpty(spaceshipName)) {
-			throw new IllegalArgumentException(ExceptionConstants.SPACESHIP_NAME_REQUIRED);
-		}
+	public ResponseEntity<List<SpaceshipDto>> getSpaceshipByName(@Valid @PathVariable("spaceshipName") String spaceshipName) {
 		List<SpaceshipDto> spaceshipDtoList = spaceshipService.getSpaceshipByName(spaceshipName);
 		return ResponseEntity.ok(spaceshipDtoList);
 	}
 
 	@PutMapping("/spaceship/{spaceshipId}")
 	@Operation(summary = "Update a spaceship", description = "Update a spaceship by its id")
-	public ResponseEntity<SpaceshipDto> updateSpaceship(
-			@PathVariable("spaceshipId") Long spaceshipId,
-			@RequestBody SpaceshipDto spaceshipDto) {
+	public ResponseEntity<SpaceshipDto> updateSpaceship(@PathVariable("spaceshipId") Long spaceshipId,
+			@Valid @RequestBody SpaceshipDto spaceshipDto) {
 
 		spaceshipService.getSpaceship(spaceshipId)
 				.orElseThrow(() -> new IllegalArgumentException(ExceptionConstants.SPACESHIP_NOT_FOUND));
-		if (StringUtil.isNullOrEmpty(spaceshipDto.getSpaceshipName())) {
-			throw new IllegalArgumentException(ExceptionConstants.SPACESHIP_NAME_REQUIRED);
-		}
 		if (spaceshipService.existsSpaceshipByName(spaceshipDto.getSpaceshipName())) {
 			throw new IllegalArgumentException(ExceptionConstants.SPACESHIP_NAME_ALREADY_EXISTS);
 		}
