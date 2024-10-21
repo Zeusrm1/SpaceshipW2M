@@ -171,7 +171,7 @@ public class SpaceshipControllerIntegrationTest {
     @Test
     void testSaveSpaceshipWithEmptyName() throws Exception {
         SpaceshipDto spaceshipDto = new SpaceshipDto();
-        spaceshipDto.setSpaceshipName(""); // Empty name
+        spaceshipDto.setSpaceshipName("");
 
         mockMvc.perform(post("/spaceship")
 						.with(httpBasic(USERNAME, PASSWORD))
@@ -185,7 +185,7 @@ public class SpaceshipControllerIntegrationTest {
     void testSaveSpaceshipAlreadyExists() throws Exception {
         SpaceshipDto spaceshipDto = new SpaceshipDto();
         spaceshipDto.setSpaceshipName("Enterprise");
-        spaceshipRepository.save(convertToEntity(spaceshipDto)); // Save first
+        spaceshipRepository.save(convertToEntity(spaceshipDto));
 
         mockMvc.perform(post("/spaceship")
 						.with(httpBasic(USERNAME, PASSWORD))
