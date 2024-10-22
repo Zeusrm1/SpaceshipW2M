@@ -1,4 +1,4 @@
-package com.example.SpaceshipW2M.controller.aspect;
+package com.example.SpaceshipW2M.app.aspect;
 
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;

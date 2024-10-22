@@ -1,4 +1,4 @@
-package com.example.SpaceshipW2M.service;
+package com.example.SpaceshipW2M.domain.service;
 
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;

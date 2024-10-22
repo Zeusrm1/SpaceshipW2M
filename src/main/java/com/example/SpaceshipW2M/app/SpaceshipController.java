@@ -1,4 +1,4 @@
-package com.example.SpaceshipW2M.controller;
+package com.example.SpaceshipW2M.app;
 
 import java.util.List;
 
@@ -11,9 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.SpaceshipW2M.dto.SpaceshipDto;
-import com.example.SpaceshipW2M.service.SpaceshipService;
-import com.example.SpaceshipW2M.utils.ExceptionConstants;
+import com.example.SpaceshipW2M.infrastructures.dto.SpaceshipDto;
+import com.example.SpaceshipW2M.domain.service.SpaceshipService;
+import com.example.SpaceshipW2M.app.utils.ControllerExceptionUtils;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,7 +35,7 @@ public class SpaceshipController {
 	@Operation(summary = "Save a spaceship", description = "Save a spaceship in the database")
 	public ResponseEntity<SpaceshipDto> saveSpaceship(@RequestBody @Valid SpaceshipDto spaceshipDto) {
 		if (spaceshipService.existsSpaceshipByName(spaceshipDto.getSpaceshipName())) {
-			throw new IllegalArgumentException(ExceptionConstants.SPACESHIP_NAME_ALREADY_EXISTS);
+			throw new IllegalArgumentException(ControllerExceptionUtils.SPACESHIP_NAME_ALREADY_EXISTS);
 		}
 		spaceshipDto = spaceshipService.saveSpaceship(spaceshipDto);
 		return new ResponseEntity<>(spaceshipDto, HttpStatus.CREATED);
@@ -46,7 +46,7 @@ public class SpaceshipController {
 	public ResponseEntity<List<SpaceshipDto>> getAllSpaceships() {
 		List<SpaceshipDto> spaceshipDtoList = spaceshipService.getAllSpaceships();
 		if (spaceshipDtoList.isEmpty()) {
-			throw new IllegalArgumentException(ExceptionConstants.SPACESHIP_NOT_FOUND);
+			throw new IllegalArgumentException(ControllerExceptionUtils.SPACESHIP_NOT_FOUND);
 		}
 		return ResponseEntity.ok(spaceshipDtoList);
 	}
@@ -55,7 +55,7 @@ public class SpaceshipController {
 	@Operation(summary = "Get a spaceship", description = "Get a spaceship by its id")
 	public ResponseEntity<SpaceshipDto> getSpaceship(@PathVariable("spaceshipId") Long spaceshipId) {
 		SpaceshipDto spaceshipDto = spaceshipService.getSpaceship(spaceshipId)
-				.orElseThrow(() -> new IllegalArgumentException(ExceptionConstants.SPACESHIP_NOT_FOUND));
+				.orElseThrow(() -> new IllegalArgumentException(ControllerExceptionUtils.SPACESHIP_NOT_FOUND));
 		return ResponseEntity.ok(spaceshipDto);
 	}
 
@@ -72,9 +72,9 @@ public class SpaceshipController {
 			@Valid @RequestBody SpaceshipDto spaceshipDto) {
 
 		spaceshipService.getSpaceship(spaceshipId)
-				.orElseThrow(() -> new IllegalArgumentException(ExceptionConstants.SPACESHIP_NOT_FOUND));
+				.orElseThrow(() -> new IllegalArgumentException(ControllerExceptionUtils.SPACESHIP_NOT_FOUND));
 		if (spaceshipService.existsSpaceshipByName(spaceshipDto.getSpaceshipName())) {
-			throw new IllegalArgumentException(ExceptionConstants.SPACESHIP_NAME_ALREADY_EXISTS);
+			throw new IllegalArgumentException(ControllerExceptionUtils.SPACESHIP_NAME_ALREADY_EXISTS);
 		}
 
 		SpaceshipDto updatedSpaceship = spaceshipService.updateSpaceship(spaceshipId, spaceshipDto.getSpaceshipName());
@@ -85,7 +85,7 @@ public class SpaceshipController {
 	@Operation(summary = "Delete a spaceship", description = "Delete a spaceship by its id")
 	public ResponseEntity<Void> deleteSpaceship(@PathVariable("spaceshipId") Long spaceshipId) {
 		spaceshipService.getSpaceship(spaceshipId)
-				.orElseThrow(() -> new IllegalArgumentException(ExceptionConstants.SPACESHIP_NOT_FOUND));
+				.orElseThrow(() -> new IllegalArgumentException(ControllerExceptionUtils.SPACESHIP_NOT_FOUND));
 		spaceshipService.deleteSpaceship(spaceshipId);
 		return ResponseEntity.noContent().build();
 	}
@@ -98,10 +98,10 @@ public class SpaceshipController {
 			PagedResourcesAssembler<SpaceshipDto> assembler) {
 		Page<SpaceshipDto> spaceshipPage = spaceshipService.getSpaceshipsPaginated(page, size);
 		if (spaceshipPage.getTotalPages() < page) {
-			throw new IllegalArgumentException(ExceptionConstants.PAGE_NOT_FOUND);
+			throw new IllegalArgumentException(ControllerExceptionUtils.PAGE_NOT_FOUND);
 		}
 		if (spaceshipPage.isEmpty()) {
-			throw new IllegalArgumentException(ExceptionConstants.SPACESHIP_NOT_FOUND);
+			throw new IllegalArgumentException(ControllerExceptionUtils.SPACESHIP_NOT_FOUND);
 		}
 		return ResponseEntity.ok(assembler.toModel(spaceshipPage));
 	}

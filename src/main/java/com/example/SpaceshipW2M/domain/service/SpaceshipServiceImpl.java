@@ -1,10 +1,10 @@
-package com.example.SpaceshipW2M.service;
+package com.example.SpaceshipW2M.domain.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -14,9 +14,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.example.SpaceshipW2M.dto.SpaceshipDto;
-import com.example.SpaceshipW2M.entity.SpaceshipEntity;
-import com.example.SpaceshipW2M.repository.SpaceshipRepository;
+import com.example.SpaceshipW2M.infrastructures.dto.SpaceshipDto;
+import com.example.SpaceshipW2M.domain.entity.SpaceshipEntity;
+import com.example.SpaceshipW2M.infrastructures.repository.SpaceshipRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;

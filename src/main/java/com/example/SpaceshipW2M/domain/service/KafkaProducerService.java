@@ -1,4 +1,4 @@
-package com.example.SpaceshipW2M.service;
+package com.example.SpaceshipW2M.domain.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

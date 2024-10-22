@@ -1,4 +1,4 @@
-package com.example.SpaceshipW2M.entity;
+package com.example.SpaceshipW2M.domain.entity;
 
 import java.io.Serializable;
 

@@ -1,4 +1,4 @@
-package com.example.SpaceshipW2M.config;
+package com.example.SpaceshipW2M.app.config;
 
 import io.swagger.v3.oas.models.info.Info;
 import org.springdoc.core.models.GroupedOpenApi;

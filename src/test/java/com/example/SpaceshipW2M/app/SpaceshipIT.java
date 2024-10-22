@@ -1,9 +1,9 @@
-package com.example.SpaceshipW2M.controller;
+package com.example.SpaceshipW2M.app;
 
-import com.example.SpaceshipW2M.dto.SpaceshipDto;
-import com.example.SpaceshipW2M.entity.SpaceshipEntity;
-import com.example.SpaceshipW2M.repository.SpaceshipRepository;
-import com.example.SpaceshipW2M.utils.ExceptionConstants;
+import com.example.SpaceshipW2M.infrastructures.dto.SpaceshipDto;
+import com.example.SpaceshipW2M.domain.entity.SpaceshipEntity;
+import com.example.SpaceshipW2M.infrastructures.repository.SpaceshipRepository;
+import com.example.SpaceshipW2M.app.utils.ControllerExceptionUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +26,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-public class SpaceshipControllerIntegrationTest {
+public class SpaceshipIT {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -72,7 +72,7 @@ public class SpaceshipControllerIntegrationTest {
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(spaceshipDto)))
 				.andExpect(status().isBadRequest())
-				.andExpect(content().string(ExceptionConstants.SPACESHIP_NAME_ALREADY_EXISTS));
+				.andExpect(content().string(ControllerExceptionUtils.SPACESHIP_NAME_ALREADY_EXISTS));
 	}
 
 	@Test
@@ -93,7 +93,7 @@ public class SpaceshipControllerIntegrationTest {
 		mockMvc.perform(get("/spaceship/{id}", 99999L)
 						.with(httpBasic(USERNAME, PASSWORD)))
 				.andExpect(status().isBadRequest())
-				.andExpect(content().string(ExceptionConstants.SPACESHIP_NOT_FOUND));
+				.andExpect(content().string(ControllerExceptionUtils.SPACESHIP_NOT_FOUND));
 	}
 
 	@Test
@@ -150,7 +150,7 @@ public class SpaceshipControllerIntegrationTest {
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(spaceshipDto2)))
 				.andExpect(status().isBadRequest())
-				.andExpect(content().string(ExceptionConstants.SPACESHIP_NAME_ALREADY_EXISTS));
+				.andExpect(content().string(ControllerExceptionUtils.SPACESHIP_NAME_ALREADY_EXISTS));
 	}
 
 	@Test
@@ -170,7 +170,7 @@ public class SpaceshipControllerIntegrationTest {
 		mockMvc.perform(delete("/spaceship/{id}", 99999L)
 						.with(httpBasic(USERNAME, PASSWORD)))
 				.andExpect(status().isBadRequest())
-				.andExpect(content().string(ExceptionConstants.SPACESHIP_NOT_FOUND));
+				.andExpect(content().string(ControllerExceptionUtils.SPACESHIP_NOT_FOUND));
 	}
 
     @Test
@@ -197,7 +197,7 @@ public class SpaceshipControllerIntegrationTest {
 		mockMvc.perform(get("/spaceships")
 						.with(httpBasic(USERNAME, PASSWORD)))
 				.andExpect(status().isBadRequest())
-				.andExpect(content().string(ExceptionConstants.SPACESHIP_NOT_FOUND));
+				.andExpect(content().string(ControllerExceptionUtils.SPACESHIP_NOT_FOUND));
 	}
 
     @Test
@@ -224,7 +224,7 @@ public class SpaceshipControllerIntegrationTest {
         mockMvc.perform(get("/spaceships/paginated?page=99999&size=7")
 						.with(httpBasic(USERNAME, PASSWORD)))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string(ExceptionConstants.PAGE_NOT_FOUND));
+                .andExpect(content().string(ControllerExceptionUtils.PAGE_NOT_FOUND));
     }
 
 	@Test
@@ -232,7 +232,7 @@ public class SpaceshipControllerIntegrationTest {
 		mockMvc.perform(get("/spaceships/paginated")
 						.with(httpBasic(USERNAME, PASSWORD)))
 				.andExpect(status().isBadRequest())
-				.andExpect(content().string(ExceptionConstants.SPACESHIP_NOT_FOUND));
+				.andExpect(content().string(ControllerExceptionUtils.SPACESHIP_NOT_FOUND));
 	}
 
 	private SpaceshipEntity convertToEntity(SpaceshipDto dto) {
