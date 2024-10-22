@@ -24,6 +24,9 @@ services:
       - "9092:9092"
     networks:
       - app-network
+    volumes:
+      - /tmp/zookeeper/data:/var/lib/zookeeper/data
+      - /tmp/zookeeper/datalog:/var/lib/zookeeper/log
     healthcheck:
       test: [ "CMD", "kafka-broker-api-versions", "--bootstrap-server", "kafka:9092" ]
       interval: 10s
