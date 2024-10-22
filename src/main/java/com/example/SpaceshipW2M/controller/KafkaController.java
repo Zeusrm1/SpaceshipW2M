@@ -1,11 +1,11 @@
-package com.example.SpaceshipW2M.app;
+package com.example.SpaceshipW2M.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.SpaceshipW2M.domain.service.KafkaProducerService;
+import com.example.SpaceshipW2M.model.service.KafkaProducerService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

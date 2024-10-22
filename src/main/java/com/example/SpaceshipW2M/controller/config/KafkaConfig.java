@@ -1,4 +1,4 @@
-package com.example.SpaceshipW2M.app.config;
+package com.example.SpaceshipW2M.controller.config;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;

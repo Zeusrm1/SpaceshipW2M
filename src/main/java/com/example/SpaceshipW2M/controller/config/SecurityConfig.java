@@ -1,4 +1,4 @@
-package com.example.SpaceshipW2M.app.config;
+package com.example.SpaceshipW2M.controller.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

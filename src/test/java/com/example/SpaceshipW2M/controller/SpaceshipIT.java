@@ -1,9 +1,9 @@
-package com.example.SpaceshipW2M.app;
+package com.example.SpaceshipW2M.controller;
 
-import com.example.SpaceshipW2M.infrastructures.dto.SpaceshipDto;
-import com.example.SpaceshipW2M.domain.entity.SpaceshipEntity;
-import com.example.SpaceshipW2M.infrastructures.repository.SpaceshipRepository;
-import com.example.SpaceshipW2M.app.utils.ControllerExceptionUtils;
+import com.example.SpaceshipW2M.model.dto.SpaceshipDto;
+import com.example.SpaceshipW2M.model.entity.SpaceshipEntity;
+import com.example.SpaceshipW2M.model.repository.SpaceshipRepository;
+import com.example.SpaceshipW2M.controller.utils.ControllerExceptionUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +26,8 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-public class SpaceshipIT {
+public class
+SpaceshipIT {
 
 	@Autowired
 	private MockMvc mockMvc;

@@ -1,4 +1,4 @@
-package com.example.SpaceshipW2M.app.exception;
+package com.example.SpaceshipW2M.controller.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,9 +1,9 @@
-package com.example.SpaceshipW2M.domain;
+package com.example.SpaceshipW2M.model;
 
-import com.example.SpaceshipW2M.domain.service.SpaceshipServiceImpl;
-import com.example.SpaceshipW2M.infrastructures.dto.SpaceshipDto;
-import com.example.SpaceshipW2M.domain.entity.SpaceshipEntity;
-import com.example.SpaceshipW2M.infrastructures.repository.SpaceshipRepository;
+import com.example.SpaceshipW2M.model.service.SpaceshipServiceImpl;
+import com.example.SpaceshipW2M.model.dto.SpaceshipDto;
+import com.example.SpaceshipW2M.model.entity.SpaceshipEntity;
+import com.example.SpaceshipW2M.model.repository.SpaceshipRepository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

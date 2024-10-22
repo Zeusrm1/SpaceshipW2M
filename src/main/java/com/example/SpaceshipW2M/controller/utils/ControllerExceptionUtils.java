@@ -1,4 +1,4 @@
-package com.example.SpaceshipW2M.app.utils;
+package com.example.SpaceshipW2M.controller.utils;
 
 public final class ControllerExceptionUtils {
 

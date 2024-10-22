@@ -1,4 +1,4 @@
-package com.example.SpaceshipW2M.domain.service;
+package com.example.SpaceshipW2M.model.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,9 +14,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.example.SpaceshipW2M.infrastructures.dto.SpaceshipDto;
-import com.example.SpaceshipW2M.domain.entity.SpaceshipEntity;
-import com.example.SpaceshipW2M.infrastructures.repository.SpaceshipRepository;
+import com.example.SpaceshipW2M.model.dto.SpaceshipDto;
+import com.example.SpaceshipW2M.model.entity.SpaceshipEntity;
+import com.example.SpaceshipW2M.model.repository.SpaceshipRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;

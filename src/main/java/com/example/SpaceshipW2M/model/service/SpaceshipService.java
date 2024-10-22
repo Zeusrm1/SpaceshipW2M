@@ -1,11 +1,11 @@
-package com.example.SpaceshipW2M.domain.service;
+package com.example.SpaceshipW2M.model.service;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 
-import com.example.SpaceshipW2M.infrastructures.dto.SpaceshipDto;
+import com.example.SpaceshipW2M.model.dto.SpaceshipDto;
 
 public interface SpaceshipService {
 

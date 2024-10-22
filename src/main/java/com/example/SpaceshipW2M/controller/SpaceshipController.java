@@ -1,4 +1,4 @@
-package com.example.SpaceshipW2M.app;
+package com.example.SpaceshipW2M.controller;
 
 import java.util.List;
 
@@ -11,9 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.SpaceshipW2M.infrastructures.dto.SpaceshipDto;
-import com.example.SpaceshipW2M.domain.service.SpaceshipService;
-import com.example.SpaceshipW2M.app.utils.ControllerExceptionUtils;
+import com.example.SpaceshipW2M.model.dto.SpaceshipDto;
+import com.example.SpaceshipW2M.model.service.SpaceshipService;
+import com.example.SpaceshipW2M.controller.utils.ControllerExceptionUtils;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
