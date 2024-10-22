@@ -46,12 +46,6 @@ public class SpaceshipControllerIntegrationTest {
 	private static final String PASSWORD = "password";
 
 
-	private SpaceshipEntity convertToEntity(SpaceshipDto dto) {
-		SpaceshipEntity entity = new SpaceshipEntity();
-		entity.setSpaceshipName(dto.getSpaceshipName());
-		return entity;
-	}
-
 	@Test
 	void testCreateSpaceship() throws Exception {
 		SpaceshipDto spaceshipDto = new SpaceshipDto();
@@ -241,5 +235,10 @@ public class SpaceshipControllerIntegrationTest {
 				.andExpect(content().string(ExceptionConstants.SPACESHIP_NOT_FOUND));
 	}
 
+	private SpaceshipEntity convertToEntity(SpaceshipDto dto) {
+		SpaceshipEntity entity = new SpaceshipEntity();
+		entity.setSpaceshipName(dto.getSpaceshipName());
+		return entity;
+	}
 
 }
