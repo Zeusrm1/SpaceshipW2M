@@ -19,7 +19,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class SpaceshipEntity implements Serializable {
 
 	@Id
