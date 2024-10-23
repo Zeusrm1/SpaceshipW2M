@@ -1,6 +1,5 @@
-package com.example.SpaceshipW2M.model;
+package com.example.SpaceshipW2M.model.service;
 
-import com.example.SpaceshipW2M.model.service.SpaceshipServiceImpl;
 import com.example.SpaceshipW2M.model.dto.SpaceshipDto;
 import com.example.SpaceshipW2M.model.entity.SpaceshipEntity;
 import com.example.SpaceshipW2M.model.repository.SpaceshipRepository;
